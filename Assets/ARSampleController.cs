@@ -55,9 +55,7 @@ public class ARSampleController : MonoBehaviour
                 filePath="tianyao.mvx";
         devicePath="";
 #endif
-        filePath = devicePath + "liuyinan.mvx";
-        Debug.Log("MVX--FILEPATH"+filePath);
-        addMvxModel(filePath);
+
 
         filePathIndex = 0;
         dataStream1 = addMvxModel(filePath);
