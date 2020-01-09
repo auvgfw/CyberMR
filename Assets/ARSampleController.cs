@@ -36,6 +36,9 @@ public class ARSampleController : MonoBehaviour
     private MvxDataStream dataStream2;
     private int filePathIndex;
 
+    bool data1active;
+    bool data2active;
+
     void Start()
     {
         Debug.Log("START");
@@ -56,12 +59,15 @@ public class ARSampleController : MonoBehaviour
         devicePath="";
 #endif
 
-
+        /*
         filePathIndex = 0;
+        filePath = devicePath + "guest1_AR.mvx";
         dataStream1 = addMvxModel(filePath);
-        filePath = devicePath + "lisaijia.mvx";
+        data1active = true;
+        filePath = devicePath + "guest3_AR.mvx";
         dataStream2 = addMvxModel(filePath);
-
+        data2active = true;
+        */
 
     }
 
@@ -181,11 +187,32 @@ public class ARSampleController : MonoBehaviour
     }
     public void onClickPlaceActor1()
     {
-        dataStream1.transform.position = spawnedObject.transform.position;
+        if (dataStream1 == null)
+        {
+            filePath = devicePath + "guest1_AR.mvx";
+            dataStream1 = addMvxModel(filePath);
+            data1active = true;
+            dataStream1.transform.position = spawnedObject.transform.position;
+
+        }
+        else
+        {
+            dataStream1.transform.position = spawnedObject.transform.position;
+        }
     }
     public void onClickPlaceActor2()
     {
-        dataStream2.transform.position = spawnedObject.transform.position;
+        if (dataStream2 == null)
+        {
+            filePath = devicePath + "guest3_AR.mvx";
+            dataStream2 = addMvxModel(filePath);
+            data2active = true;
+            dataStream2.transform.position = spawnedObject.transform.position;
+        }
+        else
+        {
+            dataStream2.transform.position = spawnedObject.transform.position;
+        }
     }
 
     public void onClickActor1ClockWise()
@@ -203,5 +230,30 @@ public class ARSampleController : MonoBehaviour
     public void onClickActor2RevClockWise()
     {
         dataStream2.transform.Rotate(new Vector3(0, -10, 0));
+    }
+    public void onClickHideActor1()
+    {
+        if (data1active == true)
+        {
+            dataStream1.Pause();
+        }
+        else
+        {
+            dataStream1.Resume();
+        }
+        data1active = !data1active;
+    }
+    public void onClickHideActor2()
+    {
+        if (data2active == true)
+        {
+            dataStream2.Pause();
+            
+        }
+        else
+        {
+            dataStream2.Resume();
+        }
+        data2active = !data2active;
     }
 }
