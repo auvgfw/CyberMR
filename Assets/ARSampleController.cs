@@ -39,6 +39,7 @@ public class ARSampleController : MonoBehaviour
     bool data1active;
     bool data2active;
 
+    MvxDataStream selectDataStream;
     void Start()
     {
         Debug.Log("START");
@@ -192,13 +193,10 @@ public class ARSampleController : MonoBehaviour
             filePath = devicePath + "guest1_AR.mvx";
             dataStream1 = addMvxModel(filePath);
             data1active = true;
-            dataStream1.transform.position = spawnedObject.transform.position;
+        }
+        dataStream1.transform.position = spawnedObject.transform.position;
+        selectDataStream = dataStream1;
 
-        }
-        else
-        {
-            dataStream1.transform.position = spawnedObject.transform.position;
-        }
     }
     public void onClickPlaceActor2()
     {
@@ -207,12 +205,12 @@ public class ARSampleController : MonoBehaviour
             filePath = devicePath + "guest3_AR.mvx";
             dataStream2 = addMvxModel(filePath);
             data2active = true;
-            dataStream2.transform.position = spawnedObject.transform.position;
         }
-        else
-        {
-            dataStream2.transform.position = spawnedObject.transform.position;
-        }
+
+
+        dataStream2.transform.position = spawnedObject.transform.position;
+
+        selectDataStream = dataStream2;
     }
 
     public void onClickActor1ClockWise()
@@ -255,5 +253,33 @@ public class ARSampleController : MonoBehaviour
             dataStream2.Resume();
         }
         data2active = !data2active;
+    }
+
+    private void LateUpdate()
+    {
+        float pinchAmount = 1.0f;
+        DetectTouchMovement.Calculate();
+
+        if (Mathf.Abs(DetectTouchMovement.pinchDistanceDelta) > 1)
+        { // zoom
+            if (DetectTouchMovement.pinchDistanceDelta > 0)
+            {
+                pinchAmount = 1.01f;
+            }
+            else
+            {
+                pinchAmount = 0.99f;
+            }
+
+
+            selectDataStream.transform.localScale *= pinchAmount;
+        }
+
+        if (Mathf.Abs(DetectTouchMovement.turnAngleDelta) > 0)
+        { // rotate
+            Vector3 rotationDeg = Vector3.zero;
+            rotationDeg.y = -DetectTouchMovement.turnAngleDelta;
+            selectDataStream.transform.Rotate(rotationDeg);
+        }
     }
 }
